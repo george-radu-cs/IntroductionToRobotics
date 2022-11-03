@@ -4,4 +4,6 @@ Introduction to Robotics laboratory homeworks, taken in the 3rd year at the Facu
 
 ## [Homework 1 - RGB LED](./homework_1/)
 
-## Homework 2 - TBA
+## [Homework 2 - Traffic lights for a crosswalk](./homework_2/)
+
+## Homework 3 - TBA
