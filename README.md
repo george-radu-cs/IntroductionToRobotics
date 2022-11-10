@@ -6,4 +6,6 @@ Introduction to Robotics laboratory homeworks, taken in the 3rd year at the Facu
 
 ## [Homework 2 - Traffic lights for a crosswalk](./homework_2/)
 
-## Homework 3 - TBA
+## [Homework 3 - 7-segment display & joystick](./homework_3/)
+
+## Homework 4 - TBA
