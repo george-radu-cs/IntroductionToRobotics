@@ -1,3 +1,5 @@
+.vscode
+.idea
 *.mp4
 *.mov
 .DS_Store
