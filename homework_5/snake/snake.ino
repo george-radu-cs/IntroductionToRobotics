@@ -4,6 +4,7 @@
 
 #include "game.h"
 #include "menu.h"
+#include "utils.h"
 
 Game *game = nullptr;
 Menu *menu = nullptr;
@@ -12,6 +13,10 @@ bool startGameIntro = true;
 
 void setup() {
   Serial.begin(9600);
+
+  // uncomment before first run to have default values saved in storage for the settings and highscores data
+  // and not get garbage info
+//  initDefaultDataInStorage();
 
   menu = Menu::getInstance();
   game = Game::getInstance();

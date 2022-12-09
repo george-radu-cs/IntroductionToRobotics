@@ -4,6 +4,31 @@
 #ifndef UTILS_H
 #define UTILS_H
 
+#include "settings.h"
+#include "highscores.h"
+#include "config.h"
+
+/**
+ * Function to set the initial state of settings and highscores on the EEPROM to not read garbage data on the first run
+ * No @params
+ * No @return
+ */
+void initDefaultDataInStorage() {
+  Settings *settings = Settings::getInstance();
+  Highscores *highscores = Highscores::getInstance();
+
+  settings->setLcdContrast(MAX_LCD_CONTRAST_BLOCK_COUNT / 2);
+  settings->setLcdBrightness(MAX_LCD_BRIGHTNESS_BLOCK_COUNT / 2);
+  settings->setMatrixBrightness(MAX_MATRIX_BRIGHTNESS_BLOCK_COUNT / 2);
+  settings->setGameDifficulty(MAX_DIFFICULTY_BLOCK_COUNT / 2);
+  settings->setIsSoundOn(true);
+  settings->setPlayerName("NO 0NE");
+  highscores->resetHighscores();
+
+  settings->saveInStorage();
+  highscores->saveInStorage();
+}
+
 /**
  * Function that returns the size of a string saved in the Flash memory
  * Function created since strlen_P didn't give me the right values for some reasons
