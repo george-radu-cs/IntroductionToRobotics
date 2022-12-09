@@ -223,7 +223,7 @@ private:
       case MenuItem::HOW_TO_PLAY:
         menuSectionsMessage[0] = F("<How to play?>");
         menuSectionsMessage[1] = F(
-            "Use the joystick to move ^<v>, can't move diagonally. Eat apples to grow and get points. Be carefull not to eat yourself or exit the matrix. Higher difficulty => higher score.");
+            "Use the joystick to move ^<v>, can't move diagonally. Eat apples to grow and get points. Be carefull not to eat yourself or exit the matrix. Don't go too long without eating or you will lose lives. Higher difficulty => higher score.");
         menuSectionsMessage[2] = (__FlashStringHelper *) backMessage;
         break;
       default:
