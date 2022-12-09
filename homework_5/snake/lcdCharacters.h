@@ -9,7 +9,8 @@
 #define FULL_BLOCK_CHAR 0
 
 void createFullBlockChar(LiquidCrystal &lcd) {
-  byte fullBlockEncoding[8] = {
+  static const byte fullBlockEncoding[8]
+  PROGMEM = {
       B11111,
       B11111,
       B11111,
@@ -19,13 +20,16 @@ void createFullBlockChar(LiquidCrystal &lcd) {
       B11111,
       B11111
   };
-  lcd.createChar(FULL_BLOCK_CHAR, fullBlockEncoding);
+  byte charEncoding[8];
+  memcpy_P(charEncoding, fullBlockEncoding, sizeof(charEncoding));
+  lcd.createChar(FULL_BLOCK_CHAR, charEncoding);
 }
 
 #define CUP_CHAR 1
 
 void createCupChar(LiquidCrystal &lcd) {
-  byte cupEncoding[8] = {
+  static const byte cupEncoding[8]
+  PROGMEM = {
       B11111,
       B11111,
       B01110,
@@ -35,13 +39,16 @@ void createCupChar(LiquidCrystal &lcd) {
       B01110,
       B11111
   };
-  lcd.createChar(CUP_CHAR, cupEncoding);
+  byte charEncoding[8];
+  memcpy_P(charEncoding, cupEncoding, sizeof(charEncoding));
+  lcd.createChar(CUP_CHAR, charEncoding);
 }
 
 #define UP_ARROW_CHAR 2
 
 void createUpArrowChar(LiquidCrystal &lcd) {
-  byte upArrowEncoding[8] = {
+  static const byte upArrowEncoding[8]
+  PROGMEM = {
       B00000,
       B00100,
       B01110,
@@ -51,13 +58,16 @@ void createUpArrowChar(LiquidCrystal &lcd) {
       B00100,
       B00000
   };
-  lcd.createChar(UP_ARROW_CHAR, upArrowEncoding);
+  byte charEncoding[8];
+  memcpy_P(charEncoding, upArrowEncoding, sizeof(charEncoding));
+  lcd.createChar(UP_ARROW_CHAR, charEncoding);
 }
 
 #define LEFT_ARROW_CHAR 3
 
 void createLeftArrowChar(LiquidCrystal &lcd) {
-  byte leftArrowEncoding[8] = {
+  static const byte leftArrowEncoding[8]
+  PROGMEM = {
       B00001,
       B00011,
       B00111,
@@ -67,13 +77,16 @@ void createLeftArrowChar(LiquidCrystal &lcd) {
       B00011,
       B00001
   };
-  lcd.createChar(LEFT_ARROW_CHAR, leftArrowEncoding);
+  byte charEncoding[8];
+  memcpy_P(charEncoding, leftArrowEncoding, sizeof(charEncoding));
+  lcd.createChar(LEFT_ARROW_CHAR, charEncoding);
 }
 
 #define DOWN_ARROW_CHAR 4
 
 void createDownArrowChar(LiquidCrystal &lcd) {
-  byte downArrowEncoding[8] = {
+  static const byte downArrowEncoding[8]
+  PROGMEM = {
       B00000,
       B00100,
       B00100,
@@ -83,13 +96,16 @@ void createDownArrowChar(LiquidCrystal &lcd) {
       B00100,
       B00000
   };
-  lcd.createChar(DOWN_ARROW_CHAR, downArrowEncoding);
+  byte charEncoding[8];
+  memcpy_P(charEncoding, downArrowEncoding, sizeof(charEncoding));
+  lcd.createChar(DOWN_ARROW_CHAR, charEncoding);
 }
 
 #define RIGHT_ARROW_CHAR 5
 
 void createRightArrowChar(LiquidCrystal &lcd) {
-  byte rightArrowEncoding[8] = {
+  static const byte rightArrowEncoding[8]
+  PROGMEM = {
       B10000,
       B11000,
       B11100,
@@ -99,7 +115,28 @@ void createRightArrowChar(LiquidCrystal &lcd) {
       B11000,
       B10000
   };
-  lcd.createChar(RIGHT_ARROW_CHAR, rightArrowEncoding);
+  byte charEncoding[8];
+  memcpy_P(charEncoding, rightArrowEncoding, sizeof(charEncoding));
+  lcd.createChar(RIGHT_ARROW_CHAR, charEncoding);
+}
+
+#define HEART_CHAR 6
+
+void createHeartChar(LiquidCrystal &lcd) {
+  static const byte heartEncoding[8]
+  PROGMEM = {
+      B10001,
+      B00000,
+      B01010,
+      B11111,
+      B01110,
+      B00100,
+      B00000,
+      B10001
+  };
+  byte charEncoding[8];
+  memcpy_P(charEncoding, heartEncoding, sizeof(charEncoding));
+  lcd.createChar(HEART_CHAR, charEncoding);
 }
 
 #endif

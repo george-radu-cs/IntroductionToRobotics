@@ -77,11 +77,16 @@ public:
         soundDevice->playSong();
       }
 
+      checkSnakeStarvationStatus();
       checkIfGameHasEnded();
       if (food.x == ASKING_FOR_NEW_FOOD_VALUE || food.y == ASKING_FOR_NEW_FOOD_VALUE) { // snake ate food
         // update game status on lcd since the user progressed
         showGameStats();
         generateNewFood();
+      }
+      if (lostALife) {
+        showGameStats();
+        lostALife = false;
       }
       displayFood(); // display blinking food on matrix
       checkSnakeChangedDirection();
@@ -108,6 +113,9 @@ private:
       {0, 0, 0, 0, 0, 0, 0, 0}
   };
 
+  int snakeNumberOfLives;
+  bool lostALife;
+  volatile unsigned long lastSnakeEatTimestamp;
   volatile Direction lastSnakeDirection = Direction::RIGHT;
   volatile Direction snakeDirection = Direction::RIGHT;
   int snakeSpeed;
@@ -151,6 +159,7 @@ private:
   /**
    * Function that prints on the lcd the game's status. Printed information:
    * - player name
+   * - snake's remaining lives
    * - snake length (displayed as SL:value) - max 2 digits since the max length of the matrix is 8x8
    * - game difficulty (displayed as D:value) - max 1 digit
    * - current game score (displayed as cup char:value) - max 3 digits since the scores ranges from 0 to 999
@@ -161,8 +170,15 @@ private:
     lcd->clear();
 
     // print name of the player message
-    lcd->printIndentedMessageOnRow(0, F("Name: "));
+    lcd->setCursorPosition(0, 0);
+    lcd->printMessage(F("Name: "));
     lcd->printMessage(settings->getPlayerName());
+    lcd->printMessage(F(" "));
+
+    // print snake's remaining lives
+    for (byte i = 0; i < snakeNumberOfLives; i++) {
+      lcd->printMessage(byte(HEART_CHAR));
+    }
 
     // print snake length message
     char snakeLengthMessage[11];
@@ -204,6 +220,9 @@ private:
     memset(gameMatrix, 0, sizeof(gameMatrix[0][0]) * MATRIX_SIZE * MATRIX_SIZE);
 
     // set the snake settings to initial values
+    lastSnakeEatTimestamp = millis();
+    snakeNumberOfLives = INITIAL_SNAKE_NUMBER_OF_LIVES;
+    lostALife = false;
     snakeSpeed = map(settings->getGameDifficulty(), MIN_DIFFICULTY_LEVEL, MAX_DIFFICULTY_LEVEL, MAX_SNAKE_SPEED,
                      MIN_SNAKE_SPEED);
     snakeLength = INITIAL_SNAKE_LENGTH;
@@ -218,9 +237,28 @@ private:
   }
 
   /**
+   * Function that checks if the snake is starving. If the snake didn't eat in the last STARVING_TIME_INTERVAL then
+   * he will lose a life, function resets the last eat timestamp to not lose all hearts at once
+   * No @params
+   * No @return
+   */
+  void checkSnakeStarvationStatus() {
+    unsigned long currentTimestamp = millis();
+    if (currentTimestamp - lastSnakeEatTimestamp >= STARVING_TIME_INTERVAL) {
+      lastSnakeEatTimestamp = currentTimestamp;
+      lostALife = true;
+      snakeNumberOfLives--;
+      if (settings->getIsSoundOn()) {
+        soundDevice->playSound(NOTE_C5, LOSING_TONE_DURATION);
+      }
+    }
+  }
+
+  /**
    * Function that checks if the game has finished and marks the game as ended. Checks made:
    * - if the snake has hit a wall
    * - if the snake has reached the max length
+   * - if the snake starved to death - lost all his lives
    * No @params
    * No @return
    */
@@ -231,6 +269,10 @@ private:
       inTransition = true;
     }
     if (snakeLength > MATRIX_SIZE * MATRIX_SIZE) { // ended because user reached max length
+      hasGameEnded = true;
+      inTransition = true;
+    }
+    if (snakeNumberOfLives <= 0) { // ended because user lost all his lives
       hasGameEnded = true;
       inTransition = true;
     }
@@ -293,7 +335,8 @@ private:
   }
 
   /**
-   * Function that checks if the snake has eaten the food and updates the snake status accordingly
+   * Function that checks if the snake has eaten the food and updates the snake status accordingly (plays a sound,
+   * increase snake's length, ask for new food, update last eat timestamp)
    * No @params
    * No @return
    */
@@ -312,6 +355,7 @@ private:
         }
       }
       askForNewFood();
+      lastSnakeEatTimestamp = millis();
     }
   }
 
@@ -469,7 +513,8 @@ private:
     if (place < NUMBER_OF_HIGHSCORES_SAVED) {
       lcMatrix->displayHappyFace();
       char *message = new char[MAX_GAME_END_MESSAGE_LENGTH];
-      sprintf(message, "Congrats! You are on place %.1d on highscores board :) - Press SW to save & continue", place + 1);
+      sprintf(message, "Congrats! You are on place %.1d on highscores board :) - Press SW to save & continue",
+              place + 1);
       lcd->printScrollingMessage(true, message, 0, 1, LCD_DISPLAY_WIDTH);
       delete[] message;
     } else {

@@ -320,6 +320,7 @@ private:
     createLeftArrowChar(lcd);
     createDownArrowChar(lcd);
     createRightArrowChar(lcd);
+    createHeartChar(lcd);
 
     // lcd init
     lcd.begin(LCD_DISPLAY_WIDTH, LCD_DISPLAY_HEIGHT);
